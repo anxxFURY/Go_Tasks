@@ -50,6 +50,7 @@ func main() {
 	}
 
 	// My Endpoint here
+	http.HandleFunc("/", handleRootDir)
 	http.HandleFunc("/open_api_completion", handleOpenApiEndPoint)
 	http.HandleFunc("/add", handleAdd)
 	http.HandleFunc("/total",hadleTotal)
@@ -61,6 +62,22 @@ func main() {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
+}
+
+func handleRootDir(w http.ResponseWriter, r *http.Request) {
+	
+	response := map[string]string{
+									"message": "Hello World",
+								}
+
+	jsonResponse, err := json.Marshal(response)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
 }
 
 func handleOpenApiEndPoint(w http.ResponseWriter, r *http.Request) {
@@ -195,5 +212,3 @@ func openApiMessage(secretKey, content string) string {
 
 	return resp.Choices[0].Message.Content
 }
-
-
